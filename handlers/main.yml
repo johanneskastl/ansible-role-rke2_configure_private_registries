@@ -1,0 +1,14 @@
+---
+# rke2_configure_private_registries/handlers/main.yml
+
+- name: 'Restart the rke2-server service on a server'
+  ansible.builtin.service:
+    name: 'rke2-server.service'
+    state: 'restarted'
+  when: 'node_type == "server"'
+
+- name: 'Restart the rke2-agent service on an agent'
+  ansible.builtin.service:
+    name: 'rke2-agent.service'
+    state: 'restarted'
+  when: 'node_type == "agent"'
