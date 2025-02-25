@@ -1,0 +1,33 @@
+{% if mirrored_registries is defined -%}
+mirrors:
+{% for mirror in mirrored_registries %}
+  {{ mirror.name }}:
+    endpoint:
+      - "{{ mirror.endpoint }}"
+{% endfor %}
+{% endif %}
+{% if registry_configs is defined -%}
+configs:
+{% for registry in registry_configs %}
+  "{{ registry.url }}":
+    {% if registry.auth is defined -%}
+    auth:
+      username: {{ registry.auth.username }}
+      password: {{ registry.auth.password }}
+{% endif %}
+{% if registry.tls is defined %}
+    tls:
+{% for key,value in registry.tls.items() %}
+{% if key == "insecure_skip_verify" %}
+{% if key | bool %}
+      insecure_skip_verify: true
+{% else %}
+      insecure_skip_verify: false
+{% endif %}
+{% else %}
+      {{ key }}: {{ value }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
